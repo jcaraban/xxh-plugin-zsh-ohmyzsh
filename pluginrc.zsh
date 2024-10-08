@@ -28,3 +28,5 @@ fi
 export DISABLE_AUTO_UPDATE=true
 source $CURR_DIR/ohmyzsh/oh-my-zsh.sh
 autoload -U compinit && compinit
+
+export ZSH_THEME_TERM_TAB_TITLE_IDLE="%m:%~"
