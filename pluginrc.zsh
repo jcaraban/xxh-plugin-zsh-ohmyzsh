@@ -30,3 +30,5 @@ source $CURR_DIR/ohmyzsh/oh-my-zsh.sh
 autoload -U compinit && compinit
 
 export ZSH_THEME_TERM_TAB_TITLE_IDLE="%m:%~"
+bindkey "^[[1~" beginning-of-line
+bindkey "^[[4~" end-of-line
