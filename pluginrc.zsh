@@ -30,6 +30,9 @@ else
   export plugins=(git)
 fi
 
+# oh-my-zsh runs compinit once; completion dirs added later by plugins would be ignored.
+fpath+=("$ZSH/custom/plugins/zsh-completions/src")
+
 export DISABLE_AUTO_UPDATE=true
 source $CURR_DIR/ohmyzsh/oh-my-zsh.sh
 
