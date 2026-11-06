@@ -27,6 +27,12 @@ fi
 # oh-my-zsh runs compinit once; completion dirs added later by plugins would be ignored.
 fpath+=("$ZSH/custom/plugins/zsh-completions/src")
 
+# xxh's static zsh cannot resolve LDAP groups, so compaudit fails with "unknown group" on every start.
+if [[ ! -v ZSH_DISABLE_COMPFIX ]] && zmodload -F zsh/stat b:zstat 2>/dev/null \
+    && [[ $(zstat -s +gid "$ZSH") == <-> ]]; then
+  ZSH_DISABLE_COMPFIX=true
+fi
+
 export DISABLE_AUTO_UPDATE=true
 source $CURR_DIR/ohmyzsh/oh-my-zsh.sh
 
