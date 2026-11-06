@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -eo pipefail
 
 CDIR="$(cd "$(dirname "$0")" && pwd)"
 build_dir=$CDIR/build
@@ -13,27 +14,20 @@ do
   esac
 done
 
-rm -rf $build_dir
-mkdir -p $build_dir
-
-for f in pluginrc.zsh
-do
-    cp $CDIR/$f $build_dir/
-done
-
-cd $build_dir
-
-[ $QUIET ] && arg_q='-q' || arg_q=''
-[ $QUIET ] && arg_s='-s' || arg_s=''
-[ $QUIET ] && arg_progress='' || arg_progress='--show-progress'
-
-ohmyzsh_home=$build_dir/ohmyzsh
-if [ -x "$(command -v git)" ]; then
-  git clone $arg_q --depth 1 https://github.com/robbyrussell/oh-my-zsh.git $ohmyzsh_home
-  git clone $arg_q --depth 1 https://github.com/zsh-users/zsh-completions $ohmyzsh_home/custom/plugins/zsh-completions
-  git clone $arg_q --depth 1 https://github.com/zsh-users/zsh-autosuggestions $ohmyzsh_home/custom/plugins/zsh-autosuggestions
-  git clone $arg_q --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting $ohmyzsh_home/custom/plugins/zsh-syntax-highlighting
-else
+if [ ! -x "$(command -v git)" ]; then
   echo Install git
   exit 1
 fi
+
+rm -rf $build_dir
+mkdir -p $build_dir
+cp $CDIR/pluginrc.zsh $build_dir/
+
+[ $QUIET ] && arg_q='-q' || arg_q=''
+
+ohmyzsh_home=$build_dir/ohmyzsh
+git clone $arg_q --depth 1 https://github.com/ohmyzsh/ohmyzsh.git $ohmyzsh_home
+for plugin in zsh-completions zsh-autosuggestions zsh-syntax-highlighting
+do
+  git clone $arg_q --depth 1 https://github.com/zsh-users/$plugin $ohmyzsh_home/custom/plugins/$plugin
+done
