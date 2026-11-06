@@ -10,26 +10,18 @@ fi
 
 export ZSH="$CURR_DIR/ohmyzsh"
 
-if [[ -v ZSH_THEME ]]; then
-  if [[ $XXH_VERBOSE == '2' ]]; then
-    echo $plugin_name: Found ZSH_THEME=$ZSH_THEME
-  fi
-else
-  if [[ $XXH_VERBOSE == '2' ]]; then
-    echo $plugin_name: Set default ZSH_THEME=agnoster
-  fi
+if [[ ! -v ZSH_THEME ]]; then
   export ZSH_THEME="agnoster"
 fi
-
-if [[ -v plugins ]]; then
-  if [[ $XXH_VERBOSE == '2' ]]; then
-    echo $plugin_name: Found plugins=$plugins
-  fi
-else
-  if [[ $XXH_VERBOSE == '2' ]]; then
-    echo $plugin_name: Set default plugins=git
-  fi
-  export plugins=(git)
+if [[ ! -v plugins ]]; then
+  plugins=(git)
+fi
+# zsh-syntax-highlighting must be sourced after every other plugin that defines widgets.
+if (( ${plugins[(Ie)zsh-syntax-highlighting]} )); then
+  plugins=(${plugins:#zsh-syntax-highlighting} zsh-syntax-highlighting)
+fi
+if [[ $XXH_VERBOSE == '2' ]]; then
+  echo "$plugin_name: ZSH_THEME=$ZSH_THEME plugins=(${plugins[*]})"
 fi
 
 # oh-my-zsh runs compinit once; completion dirs added later by plugins would be ignored.
