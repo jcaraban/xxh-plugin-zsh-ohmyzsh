@@ -1,6 +1,11 @@
 CURR_DIR="$(cd "$(dirname "$0")" && pwd)"
 plugin_name='xxh-plugin-zsh-ohmyzsh'
 
+# xxh's zsh reads no startup files of the host, so PATH and env from ~/.profile would be missing.
+if [[ -r "$HOME/.profile" ]]; then
+  emulate sh -c '. "$HOME/.profile"'
+fi
+
 export ZSH="$CURR_DIR/ohmyzsh"
 
 if [[ -v ZSH_THEME ]]; then
@@ -27,8 +32,9 @@ fi
 
 export DISABLE_AUTO_UPDATE=true
 source $CURR_DIR/ohmyzsh/oh-my-zsh.sh
-autoload -U compinit && compinit
 
 export ZSH_THEME_TERM_TAB_TITLE_IDLE="%m:%~"
 bindkey "^[[1~" beginning-of-line
 bindkey "^[[4~" end-of-line
+bindkey "^[[H" beginning-of-line
+bindkey "^[[F" end-of-line
