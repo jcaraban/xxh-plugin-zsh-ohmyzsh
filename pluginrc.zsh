@@ -2,7 +2,9 @@ CURR_DIR="$(cd "$(dirname "$0")" && pwd)"
 plugin_name='xxh-plugin-zsh-ohmyzsh'
 
 # xxh's zsh reads no startup files of the host, so PATH and env from ~/.profile would be missing.
-if [[ -r "$HOME/.profile" ]]; then
+# Once per session: nested shells inherit the environment and would only duplicate PATH entries.
+if [[ -z $XXH_PROFILE_LOADED && -r "$HOME/.profile" ]]; then
+  export XXH_PROFILE_LOADED=1
   emulate sh -c '. "$HOME/.profile"'
 fi
 
